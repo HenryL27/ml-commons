@@ -96,9 +96,10 @@ public class GenerativeQAResponseProcessor extends AbstractProcessor implements 
         String llmQuestion = params.getLlmQuestion();
         String llmModel = params.getLlmModel() == null ? this.llmModel : params.getLlmModel();
         String conversationId = params.getConversationId();
+        Integer maxPassages = params.getMaxPassages();
         log.info("LLM question: {}, LLM model {}, conversation id: {}", llmQuestion, llmModel, conversationId);
         List<Interaction> chatHistory = (conversationId == null) ? Collections.emptyList() : memoryClient.getInteractions(conversationId, DEFAULT_CHAT_HISTORY_WINDOW);
-        List<String> searchResults = getSearchResults(response);
+        List<String> searchResults = getSearchResults(response).subList(0, maxPassages);
         ChatCompletionOutput output = llm.doChatCompletion(LlmIOUtil.createChatCompletionInput(llmModel, llmQuestion, chatHistory, searchResults));
         String answer = (String) output.getAnswers().get(0);
 

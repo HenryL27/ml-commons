@@ -47,12 +47,14 @@ public class GenerativeQAParameters implements Writeable, ToXContentObject {
     private static final ParseField CONVERSATION_ID = new ParseField("conversation_id");
     private static final ParseField LLM_MODEL = new ParseField("llm_model");
     private static final ParseField LLM_QUESTION = new ParseField("llm_question");
+    private static final ParseField MAX_PASSAGES = new ParseField("max_passages");
 
     static {
         PARSER = new ObjectParser<>("generative_qa_parameters", GenerativeQAParameters::new);
         PARSER.declareString(GenerativeQAParameters::setConversationId, CONVERSATION_ID);
         PARSER.declareString(GenerativeQAParameters::setLlmModel, LLM_MODEL);
         PARSER.declareString(GenerativeQAParameters::setLlmQuestion, LLM_QUESTION);
+        PARSER.declareInt(GenerativeQAParameters::setMaxPassages, MAX_PASSAGES);
     }
 
     @Setter
@@ -67,17 +69,23 @@ public class GenerativeQAParameters implements Writeable, ToXContentObject {
     @Getter
     private String llmQuestion;
 
+    @Setter
+    @Getter
+    private Integer maxPassages;
+
     public GenerativeQAParameters(StreamInput input) throws IOException {
         this.conversationId = input.readOptionalString();
         this.llmModel = input.readOptionalString();
         this.llmQuestion = input.readString();
+        this.maxPassages = input.readInt();
     }
 
     @Override
     public XContentBuilder toXContent(XContentBuilder xContentBuilder, Params params) throws IOException {
         return xContentBuilder.field(CONVERSATION_ID.getPreferredName(), this.conversationId)
             .field(LLM_MODEL.getPreferredName(), this.llmModel)
-            .field(LLM_QUESTION.getPreferredName(), this.llmQuestion);
+            .field(LLM_QUESTION.getPreferredName(), this.llmQuestion)
+            .field(MAX_PASSAGES.getPreferredName(), this.maxPassages);
     }
 
     @Override
@@ -87,6 +95,7 @@ public class GenerativeQAParameters implements Writeable, ToXContentObject {
 
         Preconditions.checkNotNull(llmQuestion, "llm_question must not be null.");
         out.writeString(llmQuestion);
+        out.writeInt(maxPassages);
     }
 
     public static GenerativeQAParameters parse(XContentParser parser) throws IOException {
@@ -105,6 +114,7 @@ public class GenerativeQAParameters implements Writeable, ToXContentObject {
         GenerativeQAParameters other = (GenerativeQAParameters) o;
         return Objects.equals(this.conversationId, other.getConversationId())
             && Objects.equals(this.llmModel, other.getLlmModel())
-            && Objects.equals(this.llmQuestion, other.getLlmQuestion());
+            && Objects.equals(this.llmQuestion, other.getLlmQuestion())
+            && Objects.equals(this.maxPassages, other.getMaxPassages());
     }
 }
