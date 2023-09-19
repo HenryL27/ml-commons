@@ -122,7 +122,7 @@ public class GenerativeQAResponseProcessor extends AbstractProcessor implements 
         // TODO return the interaction id in the response.
 
         return new GenerativeSearchResponse(answer, response.getInternalResponse(), response.getScrollId(), response.getTotalShards(), response.getSuccessfulShards(),
-            response.getSkippedShards(), response.getSuccessfulShards(), response.getShardFailures(), response.getClusters());
+            response.getSkippedShards(), response.getSuccessfulShards(), response.getShardFailures(), response.getClusters(), interactionId);
     }
 
     private List<String> getSearchResults(SearchResponse response) {
