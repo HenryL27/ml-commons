@@ -316,6 +316,10 @@ public class InteractionsIndex {
         try (ThreadContext.StoredContext threadContext = client.threadPool().getThreadContext().stashContext()) {
             ActionListener<Boolean> internalListener = ActionListener.runBefore(listener, () -> threadContext.restore());
             ActionListener<List<Interaction>> searchListener = ActionListener.wrap(interactions -> {
+                if (interactions.isEmpty()) {
+                    internalListener.onResponse(true);
+                    return;
+                }
                 BulkRequest request = Requests.bulkRequest();
                 for (Interaction interaction : interactions) {
                     DeleteRequest delRequest = Requests.deleteRequest(indexName).id(interaction.getId());

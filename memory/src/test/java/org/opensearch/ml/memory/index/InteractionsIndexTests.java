@@ -484,7 +484,7 @@ public class InteractionsIndexTests extends OpenSearchTestCase {
         }).when(client).bulk(any(), any());
         doAnswer(invocation -> {
             ActionListener<List<Interaction>> al = invocation.getArgument(2);
-            al.onResponse(List.of());
+            al.onResponse(List.of(new Interaction("", Instant.now(), "", "", "", "", "", "")));
             return null;
         }).when(interactionsIndex).getAllInteractions(anyString(), anyInt(), any());
         @SuppressWarnings("unchecked")
@@ -505,7 +505,7 @@ public class InteractionsIndexTests extends OpenSearchTestCase {
         }).when(client).bulk(any(), any());
         doAnswer(invocation -> {
             ActionListener<List<Interaction>> al = invocation.getArgument(2);
-            al.onResponse(List.of());
+            al.onResponse(List.of(new Interaction("", Instant.now(), "", "", "", "", "", "")));
             return null;
         }).when(interactionsIndex).getAllInteractions(anyString(), anyInt(), any());
         @SuppressWarnings("unchecked")
